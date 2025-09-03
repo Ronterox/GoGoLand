@@ -4,7 +4,6 @@
     "": {
       "name": "gogoland",
       "dependencies": {
-        "@devshareacademy/connect-four": "0.2.1",
         "phaser": "3.87.0",
         "playroomkit": "0.0.81",
         "react": "18.3.1",
@@ -22,8 +21,6 @@
     },
   },
   "packages": {
-    "@devshareacademy/connect-four": ["@devshareacademy/connect-four@0.2.1", "", {}, "sha512-zVQNLh2DNbP/EVaad5bmjRZdu4zZuecVrbemWpZdz+5NBRekuklTVRMWLWhx35yxkoT/9KesuMUUM1NWjvE3qg=="],
-
     "@discord/embedded-app-sdk": ["@discord/embedded-app-sdk@2.2.0", "", { "dependencies": { "@types/lodash.transform": "^4.6.6", "@types/uuid": "^10.0.0", "big-integer": "^1.6.48", "decimal.js-light": "^2.5.0", "eventemitter3": "^5.0.0", "lodash.transform": "^4.6.0", "uuid": "^10.0.0", "zod": "^3.9.8" } }, "sha512-aOeg/0r+Y72JUeXQI5+x/yP5KXq31eN4Iv63YVJ0uE6PCVu7Zg5elaVAbJPEBAKY8Yrrdcm8x+ZO0FKfmIIifg=="],
 
     "@esbuild/linux-loong64": ["@esbuild/linux-loong64@0.14.54", "", { "os": "linux", "cpu": "none" }, "sha512-bZBrLAIX1kpWelV0XemxBZllyRmM6vgFQQG2GdNb+r3Fkp0FOh1NJSvekXDs7jq70k4euu1cryLMfU+mTXlEpw=="],
