@@ -13,7 +13,8 @@ export enum ConnectFourError {
 export type Cell = Player;
 
 export class ConnectFour {
-    static readonly BOARD_SIZE = 6;
+    static readonly BOARD_ROWS = 6;
+    static readonly BOARD_COLS = 7;
 
     currentPlayer: Player = Player.ONE;
     winner?: Player;
@@ -36,15 +37,15 @@ export class ConnectFour {
         console.log();
     }
 
-    private inBounds(x: number): boolean {
-        return x >= 0 && x < ConnectFour.BOARD_SIZE;
+    private inBounds(x: number, y: number): boolean {
+        return x >= 0 && x < ConnectFour.BOARD_COLS && y >= 0 && y < ConnectFour.BOARD_ROWS;
     }
 
     public makeMove(x: number): { x: number, y: number } {
-        if (!this.inBounds(x)) throw new Error(ConnectFourError.OUT_OF_BOUNDS);
+        if (!this.inBounds(x, 0)) throw new Error(ConnectFourError.OUT_OF_BOUNDS);
         if (this.isGameOver()) throw new Error(ConnectFourError.GAME_OVER);
 
-        for (let i = ConnectFour.BOARD_SIZE - 1; i >= 0; i--) {
+        for (let i = ConnectFour.BOARD_ROWS - 1; i >= 0; i--) {
             if (this.board[i]![x] === Player.NONE) {
                 this.board[i]![x] = this.currentPlayer;
                 const pos = { x, y: i };
@@ -55,7 +56,7 @@ export class ConnectFour {
                     let connected = 1;
 
 
-                    while (this.inBounds(x) && this.inBounds(y) && this.board[y]![x] === this.currentPlayer) {
+                    while (this.inBounds(x, y) && this.board[y]![x] === this.currentPlayer) {
                         connected++;
                         x += dx!;
                         y += dy!;
@@ -64,7 +65,7 @@ export class ConnectFour {
                     x = pos.x - dx!;
                     y = pos.y - dy!;
 
-                    while (this.inBounds(x) && this.inBounds(y) && this.board[y]![x] === this.currentPlayer) {
+                    while (this.inBounds(x, y) && this.board[y]![x] === this.currentPlayer) {
                         connected++;
                         x -= dx!;
                         y -= dy!;
@@ -82,7 +83,7 @@ export class ConnectFour {
     }
 
     constructor() {
-        this.board = Array.from({ length: ConnectFour.BOARD_SIZE },
-            () => new Array(ConnectFour.BOARD_SIZE).fill(Player.NONE));
+        this.board = Array.from({ length: ConnectFour.BOARD_ROWS },
+            () => new Array(ConnectFour.BOARD_COLS).fill(Player.NONE));
     }
 }
