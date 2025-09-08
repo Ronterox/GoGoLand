@@ -1,0 +1,43 @@
+import * as Phaser from "phaser";
+import { ConnectFour, Player } from "../api/connect-four";
+
+export enum Events {
+    MOVE = "move",
+    WAITING = "waiting",
+    GAME_START = "game-start",
+}
+
+export interface EventsData {
+    [Events.MOVE]: { x: number; y: number };
+    [Events.WAITING]: void;
+    [Events.GAME_START]: void;
+}
+
+export abstract class Service {
+    events: Phaser.Events.EventEmitter = new Phaser.Events.EventEmitter();
+    connectFour: ConnectFour = new ConnectFour();
+
+    public isCurrentPlayer(): boolean {
+        return this.connectFour.currentPlayer === Player.ONE;
+    }
+
+    public winner(): Player | undefined {
+        return this.connectFour.winner;
+    }
+
+    public isGameOver(): boolean {
+        return this.connectFour.isGameOver();
+    }
+
+    public subscribe<T extends keyof EventsData>(event: T, callback: (data: EventsData[T]) => void) {
+        this.events.on(event, callback);
+    }
+
+    public winnerText(): string {
+        return this.winner() ? `Player ${this.connectFour.winner} Wins!` : "Draw";
+    }
+
+    abstract makeMove(x: number): void;
+
+    abstract connect(): Promise<boolean>;
+}
