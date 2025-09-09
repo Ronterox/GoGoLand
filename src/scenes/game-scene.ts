@@ -221,7 +221,7 @@ export class GameScene extends Phaser.Scene {
     disableInput(): void {
         this.input.enabled = false;
         this.gamePiece.setVisible(true);
-        this.currentPlayerTurnText.setText('Opponent\'s turn');
+        this.currentPlayerTurnText.setText(this.service.whoseTurn());
     }
 
     /**
@@ -231,7 +231,7 @@ export class GameScene extends Phaser.Scene {
     enableInput(): void {
         this.input.enabled = true;
         this.gamePiece.setVisible(true);
-        this.currentPlayerTurnText.setText('Your turn');
+        this.currentPlayerTurnText.setText(this.service.whoseTurn());
     }
 
     /**

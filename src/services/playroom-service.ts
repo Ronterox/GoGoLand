@@ -43,6 +43,15 @@ export class PlayroomService extends Service {
         return this.connectFour.currentPlayer === me().getState('player');
     }
 
+    public override whoseTurn(): string {
+        for (const player of Object.values(this.players)) {
+            if (player.getState('player') === this.connectFour.currentPlayer) {
+                return player.getProfile().name + '\'s turn';
+            }
+        }
+        return "Nobody.";
+    }
+
     setPiecePosition(x: number): void {
         RPC.call(Events.HOVER, x, RPC.Mode.ALL);
     }

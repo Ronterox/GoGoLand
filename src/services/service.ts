@@ -39,9 +39,13 @@ export abstract class Service {
         return this.winner() ? `Player ${this.connectFour.winner} Wins!` : "Draw";
     }
 
+    public whoseTurn(): string {
+        return this.isCurrentPlayer() ? "Your turn" : "Opponent's turn";
+    }
+
     abstract makeMove(x: number): void;
 
-    abstract setPiecePosition(x: number);
+    abstract setPiecePosition(x: number): void;
 
     abstract connect(): Promise<boolean>;
 }
