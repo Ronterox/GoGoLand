@@ -1,4 +1,3 @@
-import { insertCoin } from "playroomkit";
 import { Service, Events } from "./service";
 
 export class LocalService extends Service {
@@ -11,6 +10,10 @@ export class LocalService extends Service {
 
     public override winnerText(): string {
         return this.winner() && !this.isCurrentPlayer() ? "You Win!" : "Opponent Wins!";
+    }
+
+    setPiecePosition(x: number): void {
+        this.events.emit(Events.HOVER, x);
     }
 
     makeMove(x: number): void {

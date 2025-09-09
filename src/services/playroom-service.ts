@@ -1,4 +1,4 @@
-import { insertCoin, isHost, myPlayer, onPlayerJoin, RPC, type PlayerState } from "playroomkit";
+import { insertCoin, isHost, me, onPlayerJoin, RPC, type PlayerState } from "playroomkit";
 import { Events, Service } from "./service";
 import { Player } from "../api/connect-four";
 
@@ -22,7 +22,7 @@ export class PlayroomService extends Service {
                     if (amountPlayers === PlayroomService.MAX_PLAYERS) {
                         player.setState('player', Player[i === 0 ? 'ONE' : 'TWO']);
                     } else if (player.getState('player') === Player.NONE) {
-                        player.setState('player', myPlayer().getState('player') == Player.ONE ? Player.TWO : Player.ONE);
+                        player.setState('player', me().getState('player') == Player.ONE ? Player.TWO : Player.ONE);
                     }
                 });
 
@@ -39,9 +39,16 @@ export class PlayroomService extends Service {
         return this.winner() && !this.isCurrentPlayer() ? "You Win!" : "Opponent Wins!";
     }
 
+    public override isCurrentPlayer(): boolean {
+        return this.connectFour.currentPlayer === me().getState('player');
+    }
+
+    setPiecePosition(x: number): void {
+        RPC.call(Events.HOVER, x, RPC.Mode.ALL);
+    }
+
     makeMove(x: number): void {
-        const data = this.connectFour.makeMove(x);
-        RPC.call(Events.MOVE, data, RPC.Mode.ALL);
+        RPC.call(Events.MOVE, x, RPC.Mode.ALL);
     }
 
     registerEvents() {
@@ -49,7 +56,12 @@ export class PlayroomService extends Service {
             this.events.emit(Events.GAME_START);
         });
 
-        RPC.register(Events.MOVE, async (data) => {
+        RPC.register(Events.HOVER, async (x) => {
+            this.events.emit(Events.HOVER, x);
+        });
+
+        RPC.register(Events.MOVE, async (x) => {
+            const data = this.connectFour.makeMove(x);
             this.events.emit(Events.MOVE, data);
         });
 

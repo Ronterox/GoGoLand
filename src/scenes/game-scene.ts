@@ -25,8 +25,6 @@ export class GameScene extends Phaser.Scene {
         // Create game objects
         this.createGameText();
         this.createBoard();
-        this.createInputColumns();
-        // this.enableInput();
         this.registerEvents();
 
         this.cameras.main.fadeIn(1000, 31, 50, 110);
@@ -46,9 +44,18 @@ export class GameScene extends Phaser.Scene {
             (data) => this.addGamePiece(data.y, data.x, !this.service.isCurrentPlayer())
         );
 
+        this.service.subscribe(Events.HOVER, (data) => this.gamePiece.setX(data));
+
         this.service.subscribe(
             Events.GAME_START,
-            () => this.enableInput()
+            () => {
+                this.createInputColumns();
+                if (this.service.isCurrentPlayer()) {
+                    this.enableInput();
+                } else {
+                    this.disableInput();
+                }
+            }
         );
     }
 
@@ -70,9 +77,10 @@ export class GameScene extends Phaser.Scene {
      */
     createInputColumns(): void {
         const columnIndexKey = 'columnIndex';
+        const colorPiece = this.service.isCurrentPlayer() ? GAME_ASSETS.RED_PIECE : GAME_ASSETS.YELLOW_PIECE;
 
         // create game piece for showing selected column
-        this.gamePiece = this.add.image(0, -FRAME_SIZE * 3.45, GAME_ASSETS.RED_PIECE)
+        this.gamePiece = this.add.image(0, -FRAME_SIZE * 3.45, colorPiece)
             .setDepth(1)
             .setVisible(false);
         this.boardContainer.add(this.gamePiece);
@@ -91,11 +99,12 @@ export class GameScene extends Phaser.Scene {
 
             zone.on(Phaser.Input.Events.POINTER_OVER, () => {
                 if (this.service.isGameOver()) return;
-                this.gamePiece.setX((zone.getData(columnIndexKey) as number) * FRAME_SIZE);
+                this.service.setPiecePosition((zone.getData(columnIndexKey) as number) * FRAME_SIZE);
             });
 
             zone.on(Phaser.Input.Events.POINTER_DOWN, () => {
                 if (this.service.isGameOver()) return;
+                this.input.enabled = false;
                 this.service.makeMove(zone.getData(columnIndexKey) as number);
             });
         }
@@ -210,9 +219,9 @@ export class GameScene extends Phaser.Scene {
      * Note: this currently does not lock the input since both players playing locally.
      */
     disableInput(): void {
-        this.input.enabled = true;
+        this.input.enabled = false;
         this.gamePiece.setVisible(true);
-        this.currentPlayerTurnText.setText('Player Twos turn');
+        this.currentPlayerTurnText.setText('Opponent\'s turn');
     }
 
     /**
@@ -222,7 +231,7 @@ export class GameScene extends Phaser.Scene {
     enableInput(): void {
         this.input.enabled = true;
         this.gamePiece.setVisible(true);
-        this.currentPlayerTurnText.setText('Player Ones turn');
+        this.currentPlayerTurnText.setText('Your turn');
     }
 
     /**
@@ -238,7 +247,7 @@ export class GameScene extends Phaser.Scene {
             onComplete: () => {
                 this.cameras.main.fadeOut(1000);
                 this.cameras.main.on(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    window.location.replace('/');
+                    window.location.reload();
                 });
             },
         });

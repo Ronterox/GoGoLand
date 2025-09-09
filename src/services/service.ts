@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import { ConnectFour, Player } from "../api/connect-four";
 
 export enum Events {
+    HOVER = "hover",
     MOVE = "move",
     WAITING = "waiting",
     GAME_START = "game-start",
@@ -9,6 +10,7 @@ export enum Events {
 
 export interface EventsData {
     [Events.MOVE]: { x: number; y: number };
+    [Events.HOVER]: number;
     [Events.WAITING]: void;
     [Events.GAME_START]: void;
 }
@@ -38,6 +40,8 @@ export abstract class Service {
     }
 
     abstract makeMove(x: number): void;
+
+    abstract setPiecePosition(x: number);
 
     abstract connect(): Promise<boolean>;
 }
