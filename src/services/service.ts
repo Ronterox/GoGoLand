@@ -12,7 +12,7 @@ export interface EventsData {
     [Events.MOVE]: { x: number; y: number };
     [Events.HOVER]: number;
     [Events.WAITING]: void;
-    [Events.GAME_START]: void;
+    [Events.GAME_START]: { red?: string; yellow?: string };
 }
 
 export abstract class Service {

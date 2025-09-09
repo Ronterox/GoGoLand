@@ -48,8 +48,60 @@ export class GameScene extends Phaser.Scene {
 
         this.service.subscribe(
             Events.GAME_START,
-            () => {
+            async (data) => {
+                const promises = [];
+
+                if (!this.service.isCurrentPlayer()) {
+                    [data.red, data.yellow] = [data.yellow, data.red];
+                }
+
+                if (data.red) {
+                    const img = new Image();
+                    img.src = data.red;
+
+                    promises.push(new Promise((resolve) => {
+                        img.onload = () => {
+                            const original = this.textures.get(GAME_ASSETS.RED_PIECE).getSourceImage();
+                            this.textures.remove(GAME_ASSETS.RED_PIECE);
+
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = original.width;
+                            tempCanvas.height = original.height;
+
+                            const ctx = tempCanvas.getContext('2d');
+                            ctx?.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+
+                            this.textures.addCanvas(GAME_ASSETS.RED_PIECE, tempCanvas);
+                            resolve(0);
+                        };
+                    }));
+                }
+
+                if (data.yellow) {
+                    const img = new Image();
+                    img.src = data.yellow;
+
+                    promises.push(new Promise((resolve) => {
+                        img.onload = () => {
+                            const original = this.textures.get(GAME_ASSETS.YELLOW_PIECE).getSourceImage();
+                            this.textures.remove(GAME_ASSETS.YELLOW_PIECE);
+
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = original.width;
+                            tempCanvas.height = original.height;
+
+                            const ctx = tempCanvas.getContext('2d');
+                            ctx?.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
+
+                            this.textures.addCanvas(GAME_ASSETS.YELLOW_PIECE, tempCanvas);
+                            resolve(0);
+                        };
+                    }));
+                }
+
+                await Promise.all(promises);
                 this.createInputColumns();
+
                 if (this.service.isCurrentPlayer()) {
                     this.enableInput();
                 } else {

@@ -17,6 +17,8 @@ export class PlayroomService extends Service {
             }, () => {
                 if (!isHost()) return;
                 const amountPlayers = Object.keys(this.players).length;
+                let red = "";
+                let yellow = "";
 
                 Object.values(this.players).forEach((player, i) => {
                     if (amountPlayers === PlayroomService.MAX_PLAYERS) {
@@ -24,9 +26,16 @@ export class PlayroomService extends Service {
                     } else if (player.getState('player') === Player.NONE) {
                         player.setState('player', me().getState('player') == Player.ONE ? Player.TWO : Player.ONE);
                     }
+
+                    const photo = player.getProfile().photo;
+                    if (player.getState('player') === Player.ONE) {
+                        red = photo;
+                    } else {
+                        yellow = photo;
+                    }
                 });
 
-                RPC.call(Events.GAME_START, undefined, RPC.Mode.ALL);
+                RPC.call(Events.GAME_START, { red, yellow }, RPC.Mode.ALL);
             });
             return true;
         } catch (error) {
@@ -61,8 +70,8 @@ export class PlayroomService extends Service {
     }
 
     registerEvents() {
-        RPC.register(Events.GAME_START, async () => {
-            this.events.emit(Events.GAME_START);
+        RPC.register(Events.GAME_START, async (data) => {
+            this.events.emit(Events.GAME_START, data);
         });
 
         RPC.register(Events.HOVER, async (x) => {
