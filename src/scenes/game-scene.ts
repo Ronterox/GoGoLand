@@ -1,11 +1,7 @@
-/**
- * Core Phaser 3 Scene that has the actual game play of our Connect Four Game.
- */
-
 import * as Phaser from 'phaser';
 import { FRAME_SIZE, GAME_ASSETS, GAME_HEIGHT, GAME_WIDTH, SCENE_KEYS } from '../common';
-import { LocalService } from '../services/local-service';
 import { Events, type Service } from '../services/service';
+import { PlayroomService } from '../services/playroom-service';
 
 export class GameScene extends Phaser.Scene {
     service!: Service;
@@ -19,7 +15,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     public init() {
-        this.service = new LocalService();
+        this.service = new PlayroomService();
     }
 
     public create(): void {
@@ -248,3 +244,4 @@ export class GameScene extends Phaser.Scene {
         });
     }
 }
+

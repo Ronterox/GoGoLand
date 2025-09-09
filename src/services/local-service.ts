@@ -1,3 +1,4 @@
+import { insertCoin } from "playroomkit";
 import { Service, Events } from "./service";
 
 export class LocalService extends Service {
@@ -16,5 +17,5 @@ export class LocalService extends Service {
         const data = this.connectFour.makeMove(x);
         this.events.emit(Events.MOVE, data);
     }
-
 }
+

@@ -41,3 +41,4 @@ export abstract class Service {
 
     abstract connect(): Promise<boolean>;
 }
+
