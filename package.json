@@ -3,9 +3,9 @@
     "version": "0.0.1",
     "description": "A game of Go but for the land",
     "scripts": {
-        "start": "vite",
+        "dev": "vite",
         "build": "tsc && vite build",
-        "serve": "vite preview"
+        "serve": "vite --host"
     },
     "devDependencies": {
         "@tweakpane/core": "2.0.3",

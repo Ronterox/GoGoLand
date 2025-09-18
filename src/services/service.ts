@@ -43,6 +43,8 @@ export abstract class Service {
         return this.isCurrentPlayer() ? "Your turn" : "Opponent's turn";
     }
 
+    abstract reload(): void;
+
     abstract makeMove(x: number): void;
 
     abstract setPiecePosition(x: number): void;

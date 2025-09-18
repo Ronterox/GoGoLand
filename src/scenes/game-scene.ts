@@ -299,7 +299,7 @@ export class GameScene extends Phaser.Scene {
             onComplete: () => {
                 this.cameras.main.fadeOut(1000);
                 this.cameras.main.on(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                    window.location.reload();
+                    this.service.reload();
                 });
             },
         });

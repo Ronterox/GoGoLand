@@ -44,6 +44,10 @@ export class PlayroomService extends Service {
         }
     }
 
+    reload(): void {
+        this.events.emit(Events.WAITING);
+    }
+
     public override winnerText(): string {
         return this.winner() && !this.isCurrentPlayer() ? "You Win!" : "Opponent Wins!";
     }
