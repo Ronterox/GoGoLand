@@ -45,7 +45,7 @@ export class PlayroomService extends Service {
     }
 
     reload(): void {
-        this.events.emit(Events.WAITING);
+        RPC.call(Events.WAITING, undefined, RPC.Mode.ALL);
     }
 
     public override winnerText(): string {
@@ -80,6 +80,10 @@ export class PlayroomService extends Service {
 
         RPC.register(Events.HOVER, async (x) => {
             this.events.emit(Events.HOVER, x);
+        });
+
+        RPC.register(Events.WAITING, async () => {
+            window.location.reload();
         });
 
         RPC.register(Events.MOVE, async (x) => {
